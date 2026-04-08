@@ -87,7 +87,7 @@ canvas {
     <h1>🎉 Happy Birthday Esther 🎂</h1>
     <div id="text"></div>
 
-    <button onclick="startAll()">Tap Me 🎁</button>
+    <button onclick="startAll(); this.disabled=true;">Tap Me 🎁</button>
 
     <p id="extra" style="display:none;">
         You are special to me 💖✨
@@ -156,17 +156,32 @@ function animate() {
 }
 animate();
 
-// Start everything
+// FIXED: Start everything on button click
 function startAll() {
-    document.getElementById("music").play();
+    let music = document.getElementById("music");
+
+    // Ensure music is ready to play
+    if (music.paused) {
+        music.play().catch(err => {
+            console.log("Audio blocked, user interaction required");
+        });
+    }
+
+    // Show extra message
     document.getElementById("extra").style.display = "block";
+
+    // Start typing effect
+    i = 0;
+    document.getElementById("text").innerHTML = "";
     type();
 
+    // Start fireworks automatically
     setInterval(() => {
         firework(Math.random()*canvas.width, Math.random()*canvas.height/2);
     }, 800);
 }
 </script>
+
 
 </body>
 </html>
