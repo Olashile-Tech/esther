@@ -6,177 +6,167 @@
 <title>Happy Birthday 🎉</title>
 
 <style>
-    body {
-        margin: 0;
-        padding: 0;
-        font-family: 'Poppins', sans-serif;
-        background: linear-gradient(to right, #ff758c, #ff7eb3);
-        overflow: hidden;
-        color: white;
-        text-align: center;
-    }
-#fireworks {
+body {
+    margin: 0;
+    overflow: hidden;
+    font-family: Arial, sans-serif;
+    background: linear-gradient(to right, #ff758c, #ff7eb3);
+    color: white;
+    text-align: center;
+}
+
+/* Card */
+.card {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background: rgba(255,255,255,0.1);
+    padding: 30px;
+    border-radius: 20px;
+    width: 90%;
+    max-width: 400px;
+}
+
+/* Typing */
+#text {
+    font-size: 18px;
+    margin-top: 15px;
+    min-height: 60px;
+}
+
+/* Button */
+button {
+    margin-top: 20px;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 20px;
+    background: white;
+    color: #ff4e8a;
+    cursor: pointer;
+}
+
+/* Balloons */
+.balloon {
+    position: absolute;
+    bottom: -100px;
+    width: 40px;
+    height: 60px;
+    border-radius: 50%;
+    animation: float 6s infinite;
+}
+
+.balloon:nth-child(1){left:10%;background:red;}
+.balloon:nth-child(2){left:30%;background:yellow;}
+.balloon:nth-child(3){left:50%;background:green;}
+.balloon:nth-child(4){left:70%;background:blue;}
+.balloon:nth-child(5){left:90%;background:purple;}
+
+@keyframes float {
+    0%{transform:translateY(0);}
+    100%{transform:translateY(-110vh);}
+}
+
+/* Fireworks canvas */
+canvas {
     position: fixed;
     top: 0;
     left: 0;
-    width: 100%;
-    height: 100%;
-    pointer-events: none;
 }
-
-    .card {
-        position: relative;
-        top: 50%;
-        transform: translateY(-50%);
-        margin: auto;
-        background: rgba(255, 255, 255, 0.1);
-        padding: 40px;
-        border-radius: 20px;
-        backdrop-filter: blur(10px);
-        box-shadow: 0 10px 30px rgba(0,0,0,0.2);
-        width: 80%;
-        max-width: 400px;
-    }
-
-    h1 {
-        font-size: 2rem;
-    }
-
-    #typing {
-        font-size: 1.2rem;
-        margin-top: 15px;
-        min-height: 80px;
-    }
-
-    button {
-        margin-top: 20px;
-        padding: 10px 20px;
-        border: none;
-        border-radius: 25px;
-        background: white;
-        color: #ff4e8a;
-        cursor: pointer;
-    }
-
-    /* 🎈 Balloons */
-    .balloon {
-        position: absolute;
-        bottom: -150px;
-        width: 40px;
-        height: 60px;
-        background: red;
-        border-radius: 50%;
-        animation: float 6s infinite;
-    }
-
-    .balloon:nth-child(1) { left: 10%; background: #ff4e8a; animation-duration: 5s; }
-    .balloon:nth-child(2) { left: 30%; background: #ffd166; animation-duration: 6s; }
-    .balloon:nth-child(3) { left: 50%; background: #06d6a0; animation-duration: 7s; }
-    .balloon:nth-child(4) { left: 70%; background: #118ab2; animation-duration: 5.5s; }
-    .balloon:nth-child(5) { left: 90%; background: #ef476f; animation-duration: 6.5s; }
-
-    @keyframes float {
-        0% { transform: translateY(0); opacity: 1; }
-        100% { transform: translateY(-110vh); opacity: 0; }
-    }
 </style>
 </head>
 
 <body>
 
-<!-- 🎶 Background Music -->
-<audio autoplay loop>
-    <source src="music.mp3" type="audio/mp3">
+<!-- Music (tap button to play) -->
+<audio id="music" loop>
+    <source src="https://cdn.pixabay.com/audio/2022/03/15/audio_115b9b1fdb.mp3" type="audio/mp3">
 </audio>
 
 <div class="card">
-    <h1>🎉 Happy Birthday, Esther! 🎂</h1>
+    <h1>🎉 Happy Birthday Esther 🎂</h1>
+    <div id="text"></div>
 
-    <div id="typing"></div>
+    <button onclick="startAll()">Tap Me 🎁</button>
 
-    <button onclick="showMessage()">Click Me 🎁</button>
-
-    <p id="hiddenMessage" style="display:none; margin-top:15px;">
-        You are truly a special being… happy birthday to you 😊💖
+    <p id="extra" style="display:none;">
+        You are special to me 💖✨
     </p>
 </div>
 
-<!-- 🎈 Balloons -->
+<!-- Balloons -->
 <div class="balloon"></div>
 <div class="balloon"></div>
 <div class="balloon"></div>
 <div class="balloon"></div>
 <div class="balloon"></div>
+
+<!-- Fireworks -->
+<canvas id="canvas"></canvas>
 
 <script>
-    // ⌨️ Typing Animation
-    const text = "On your special day, I just want to say... You are amazing, beautiful, and one of the best people to be with 💖✨";
-    let index = 0;
+// Typing effect
+let msg = "On your special day, I just want to remind you how amazing you are 💖";
+let i = 0;
 
-    function typeEffect() {
-        if (index < text.length) {
-            document.getElementById("typing").innerHTML += text.charAt(index);
-            index++;
-            setTimeout(typeEffect, 40);
-        }
+function type() {
+    if (i < msg.length) {
+        document.getElementById("text").innerHTML += msg.charAt(i);
+        i++;
+        setTimeout(type, 40);
     }
+}
 
-    typeEffect();
-
-    function showMessage() {
-        document.getElementById("hiddenMessage").style.display = "block";
-    }
-</script>
-<script>
-const canvas = document.getElementById("fireworks");
-const ctx = canvas.getContext("2d");
+// Fireworks
+let canvas = document.getElementById("canvas");
+let ctx = canvas.getContext("2d");
 
 canvas.width = window.innerWidth;
 canvas.height = window.innerHeight;
 
 let particles = [];
 
-function createFirework(x, y) {
-    for (let i = 0; i < 50; i++) {
+function firework(x, y) {
+    for (let i = 0; i < 40; i++) {
         particles.push({
             x: x,
             y: y,
-            speedX: (Math.random() - 0.5) * 6,
-            speedY: (Math.random() - 0.5) * 6,
-            size: Math.random() * 3 + 2,
+            vx: (Math.random() - 0.5) * 5,
+            vy: (Math.random() - 0.5) * 5,
             life: 100
         });
     }
 }
 
-function updateParticles() {
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
+function animate() {
+    ctx.clearRect(0,0,canvas.width,canvas.height);
 
     particles.forEach((p, index) => {
-        p.x += p.speedX;
-        p.y += p.speedY;
+        p.x += p.vx;
+        p.y += p.vy;
         p.life--;
 
-        ctx.beginPath();
-        ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
-        ctx.fillStyle = hsl(${Math.random() * 360}, 100%, 50%);
-        ctx.fill();
+        ctx.fillStyle = "white";
+        ctx.fillRect(p.x, p.y, 2, 2);
 
-        if (p.life <= 0) {
-            particles.splice(index, 1);
-        }
+        if (p.life <= 0) particles.splice(index,1);
     });
 
-    requestAnimationFrame(updateParticles);
+    requestAnimationFrame(animate);
 }
+animate();
 
-updateParticles();
+// Start everything
+function startAll() {
+    document.getElementById("music").play();
+    document.getElementById("extra").style.display = "block";
+    type();
 
-// 🎆 Trigger fireworks on click
-document.body.addEventListener("click", (e) => {
-    createFirework(e.clientX, e.clientY);
-});
+    setInterval(() => {
+        firework(Math.random()*canvas.width, Math.random()*canvas.height/2);
+    }, 800);
+}
 </script>
-<canvas id="fireworks"></canvas>
+
 </body>
 </html>
